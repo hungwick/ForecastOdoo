@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_template_form_inherit_ai" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.ai</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='purchase']" position="inside">
+                <group string="Cấu hình Định mức Dự báo AI">
+
+                    <group>
+                        <field name="qty_nhom_a"/>
+                        <field name="qty_nhom_b"/>
+                        <field name="qty_nhom_c"/>
+                    </group>
+
+                    <group>
+                        <field name="ai_safety_stock"/>
+                        <field name="is_perishable"/>
+                    </group>
+
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

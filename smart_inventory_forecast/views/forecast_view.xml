@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- GRAPH VIEW -->
+    <record id="view_smart_forecast_graph" model="ir.ui.view">
+        <field name="name">smart.forecast.graph</field>
+        <field name="model">smart.forecast</field>
+        <field name="arch" type="xml">
+            <graph string="Biểu đồ dự báo" type="bar">
+                <field name="forecast_date" type="row"/>
+                <field name="adjusted_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- PIVOT VIEW -->
+    <record id="view_smart_forecast_pivot" model="ir.ui.view">
+        <field name="name">smart.forecast.pivot</field>
+        <field name="model">smart.forecast</field>
+        <field name="arch" type="xml">
+            <pivot string="Thống kê dự báo">
+                <field name="product_id" type="row"/>
+                <field name="forecast_date" type="col"/>
+                <field name="adjusted_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ================= FORM VIEW ================= -->
+    <record id="view_smart_forecast_form" model="ir.ui.view">
+        <field name="name">smart.forecast.form</field>
+        <field name="model">smart.forecast</field>
+        <field name="arch" type="xml">
+            <form string="Dự báo tồn kho">
+                <header>
+                    <button name="action_run_forecast"
+                            type="object"
+                            string="1. Chạy Dự Báo AI"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+
+                    <button name="action_create_po"
+                            type="object"
+                            string="2. Chốt &amp; Tạo Đơn Mua"
+                            class="btn-success"
+                            invisible="state != 'done'"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+
+                    <!-- SMART BUTTON -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_order"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-shopping-cart"
+                                invisible="not purchase_order_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Xem Đơn</span>
+                                <span class="o_stat_text">Mua Hàng</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- TITLE -->
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+
+                    <!-- MAIN -->
+                    <group>
+                        <!-- INPUT -->
+                        <group string="Thông tin Đầu vào">
+                            <field name="product_id" readonly="state != 'draft'"/>
+                            <field name="forecast_date" readonly="state != 'draft'"/>
+
+                            <field name="predicted_qty"
+                                   widget="badge"
+                                   decoration-info="predicted_qty == 'Nhom_A'"
+                                   decoration-warning="predicted_qty == 'Nhom_B'"
+                                   decoration-danger="predicted_qty == 'Nhom_C'"/>
+                        </group>
+
+                        <!-- BUSINESS -->
+                        <group string="Nghiệp vụ Mua hàng">
+                            <field name="current_stock" readonly="1"/>
+                            <field name="suggested_qty" readonly="1"/>
+
+                            <field name="adjusted_qty"
+                                   readonly="state == 'po_created'"/>
+
+                            <field name="purchase_order_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================= LIST VIEW ================= -->
+    <record id="view_smart_forecast_list" model="ir.ui.view">
+        <field name="name">smart.forecast.list</field>
+        <field name="model">smart.forecast</field>
+        <field name="arch" type="xml">
+            <list string="Danh sách dự báo">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="forecast_date"/>
+
+                <field name="predicted_qty"
+                       widget="badge"
+                       decoration-info="predicted_qty == 'Nhom_A'"
+                       decoration-warning="predicted_qty == 'Nhom_B'"
+                       decoration-danger="predicted_qty == 'Nhom_C'"/>
+
+                <field name="adjusted_qty" string="Chốt mua"/>
+
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'po_created'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================= BULK ACTION ================= -->
+    <record id="action_run_forecast_bulk" model="ir.actions.server">
+        <field name="name">Chạy Dự Báo AI (Hàng loạt)</field>
+        <field name="model_id" ref="model_smart_forecast"/>
+        <field name="binding_model_id" ref="model_smart_forecast"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_run_forecast()
+        </field>
+    </record>
+
+    <!-- ================= ACTION ================= -->
+    <record id="action_smart_forecast" model="ir.actions.act_window">
+        <field name="name">Dự báo nhu cầu AI</field>
+        <field name="res_model">smart.forecast</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+
+    <!-- ================= MENU ================= -->
+    <menuitem id="menu_smart_forecast_root" name="AI Forecast" sequence="10"/>
+    <menuitem id="menu_smart_forecast_main" name="Dự báo" parent="menu_smart_forecast_root"/>
+    <menuitem id="menu_smart_forecast_action"
+              name="Danh sách dự báo"
+              parent="menu_smart_forecast_main"
+              action="action_smart_forecast"/>
+    <menuitem id="menu_forecast_dashboard"
+          name="Dashboard"
+          parent="menu_smart_forecast_root"
+          action="action_smart_forecast"
+          sequence="2"/>
+</odoo>
