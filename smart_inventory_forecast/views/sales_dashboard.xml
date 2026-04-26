@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sales_dashboard" model="ir.ui.view">
+            <field name="name">sales.dashboard</field>
+            <field name="model">sales.analytics</field>
+            <field name="arch" type="xml">
+
+                <kanban>
+                    <templates>
+
+                        <t t-name="card">
+                            <div class="o_kanban_card">
+
+                                <strong>
+                                    <field name="product_id"/>
+                                </strong>
+
+                                <div>
+                                    📅 Hôm nay: <field name="today_qty"/>
+                                </div>
+
+                                <div>
+                                    📊 Tuần: <field name="week_qty"/>
+                                </div>
+
+                                <div>
+                                    📈 Tháng: <field name="month_qty"/>
+                                </div>
+
+                                <!-- màu trend -->
+                                <div t-if="record.trend_month.raw_value and 'Tăng' in record.trend_month.raw_value"
+                                     style="color:green;">
+                                    <field name="trend_month"/>
+                                </div>
+
+                                <div t-if="record.trend_month.raw_value and 'Giảm' in record.trend_month.raw_value"
+                                     style="color:red;">
+                                    <field name="trend_month"/>
+                                </div>
+
+                                <div t-if="record.trend_month.raw_value == 'Ổn định'">
+                                    <field name="trend_month"/>
+                                </div>
+
+                            </div>
+                        </t>
+
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

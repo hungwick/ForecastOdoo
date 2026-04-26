@@ -150,9 +150,4 @@ if records:
               name="Danh sách dự báo"
               parent="menu_smart_forecast_main"
               action="action_smart_forecast"/>
-    <menuitem id="menu_forecast_dashboard"
-          name="Dashboard"
-          parent="menu_smart_forecast_root"
-          action="action_smart_forecast"
-          sequence="2"/>
 </odoo>

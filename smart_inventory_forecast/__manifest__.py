@@ -14,7 +14,11 @@
     'data': [
         'security/ir.model.access.csv',
         'views/forecast_view.xml',
-        'views/product_template_view.xml'
+        'views/product_template_view.xml',
+        'views/sales_analytics_view.xml',
+        'views/sales_dashboard.xml',
+        'views/sales_analytics_chart.xml',
+        'views/material_usage_view.xml'
     ],
     'installable': True,
     'application': True,

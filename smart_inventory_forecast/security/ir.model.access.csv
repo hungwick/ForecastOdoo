@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_smart_forecast,smart.forecast.access,model_smart_forecast,base.group_user,1,1,1,1
+access_sales_analytics_user,sales.analytics,model_sales_analytics,,1,1,1,1
+access_material_usage,access_material_usage,model_material_usage,base.group_user,1,1,1,1
